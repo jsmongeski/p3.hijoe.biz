@@ -1,0 +1,68 @@
+<HTML>
+<HEAD>
+    <TITLE> Add/Remove dynamic rows in HTML table </TITLE>
+    <link rel="stylesheet" href="css/main.css" type="text/css">
+
+</HEAD>
+
+<BODY>
+    
+    <h1>Portfolio Plus</h1>
+
+    <form onsubmit="return false"action="">
+        <input id="newticker"  type="text" name="symbol">
+        <input id="cost"  type="text" name="Cost" >
+        <input id="nshares"  type="text" name="nshares" >
+        <input type="submit" value="Submit">
+    </form> 
+
+
+ 
+    <TABLE id="dataTable" width="1000px" border="1" align="left"> 
+       <tr id=tblcolhead >
+          <th id="Symbol">      Symbol      </th>
+          <th id="Last">Last</th>
+          <th id="volume">Volume</th>
+          <th id="avvolume">Avg Volume</th>
+          <th id="cost">Cost</th>
+          <th id="shares">Num Shares</th>
+          <th id="origvalue">OrigValue</th>
+          <th id="curvalue">Value</th>
+          <th id="gainloss">Gain/(Loss)</th>
+          <th id="broker">Broker</th>
+        </tr>
+    </TABLE>
+ 
+    <!--Source in jquery-->
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="js/tblgen2.js"></script>
+</BODY>
+</HTML>
+
+
+<!--
+
+          <th id="filler">Filler</th>
+
+        <input id="newticker"  type="text" name="symbol" value="Stock Symbol">
+        <input  value="Stock Symbol">
+        <INPUT type="button" value="Add Row" onclick="addRow('dataTable', 'MSFT')" />
+    <INPUT type="button" value="Delete Row" onclick="deleteRow('dataTable')" />
+        <TR>
+            <TD><INPUT type="button" value="Update" name="upd"/></TD>
+            <TD> 1 </TD>
+            <TD> <INPUT type="text" /> </TD>
+        </TR>
+            <TD><INPUT type="checkbox" name="chk"/></TD>
+            symbol.id="symbol" + rowCount;
+
+        //list[z].onclick = (function (e, test_msg) {
+            //return function(e) {
+                //sib(e, test_msg);
+            //};
+        //})(e, test_msg);
+style="width:10%">Symbol</th>
+
+          <th id="update">Update</th>
+          <th id="delete">Delete</th>
+-->
