@@ -4,9 +4,6 @@
         // Retrieve this from config page when it is ready:
         var brokerLink = '<a href="https://invest.ameritrade.com/grid/p/login" target = "_blank">Trade</a>';
 
-        //$(document).ready(function() {
-        //});
-
         function addRow(table,ticker, cost, nshares) {
 
             // Create a new row:
@@ -83,9 +80,12 @@
             OrigVal.type =  "text";
             OrigVal.name =  "origval";
             OrigVal.id =  "origval" + ticker;
-            OrigVal.innerHTML = cost * nshares;
+            var tmpval = cost * nshares;
+            OrigVal.innerHTML = tmpval.toFixed(2);
+            tmpval = 0;
             var origval =  OrigVal.innerHTML;
-            
+
+          
             // Current Value
             var CurVal = row.insertCell(7);
             CurVal.type =  "text";
@@ -99,9 +99,16 @@
             GainLoss.type = "text";
             GainLoss.name = "gainloss";
             GainLoss.id =  "gainloss" + ticker;
-            GainLoss.innerHTML = curval - origval;
+            curval=1;
+            tmpval =  curval - origval;
 
-            //GainLoss.css('backgroundColor', '#FF00');
+            $('#gainloss' + ticker).css('backgroundColor', "lightgreen");
+            if (tmpval < 0 ) {
+                $('#gainloss' + ticker).css('backgroundColor', "red");
+            } 
+            GainLoss.innerHTML = tmpval.toFixed(2);
+            tmpval =  0;
+
             
 
             // Broker link
@@ -111,8 +118,49 @@
             Trade.id =  "trade" + ticker;
             Trade.innerHTML = brokerLink;
 
+
+
+            // Simulate a stock update from an internet data service:
+            var Update = row.insertCell(10);
+            var updatebtn = document.createElement("input");
+            updatebtn.type = "button";
+            updatebtn.value = "Update";
+            updatebtn.id =  "updatebtn" + ticker;
+            Update.appendChild(updatebtn);
+
+            $('#updatebtn' + ticker).click(function() {
+
+                // last stk price:
+                $('#last' + ticker).html("22");
+
+                // get new last:
+                var last = $('#last' + ticker).html();
+
+                // volume:
+                $('#vol' + ticker).html("233000");
+
+                // get nshares:
+                var nshares = $('#nshares' + ticker).html();
+
+                // set/get current stock value:
+                $('#curval' + ticker).html(last * nshares);
+                var curval = $('#curval' + ticker).html();
+
+                // get original value:
+                var origval = $('#origval' + ticker).html();
+
+                //set gainloss:
+                $('#gainloss' + ticker).html(curval - origval);
+
+                //set gainloss color:
+                $('#gainloss' + ticker).css('backgroundColor', "lightgreen");
+                if (  $('#gainloss' + ticker).html() < 0 ) {
+                    $('#gainloss' + ticker).css('backgroundColor', "red");
+                } 
+            });
+
             // Setup Delete row handler:
-            var deleterow = row.insertCell(10);
+            var deleterow = row.insertCell(11);
             var deleteMe = document.createElement("input");
             deleteMe.type = "button";
             deleteMe.value="Delete";
@@ -125,39 +173,6 @@
                 table.deleteRow(delRow);
 
                 //console.log("You clicked on row  "  + $(delId).parent().parent().index()); 
-            });
-
-
-            // Simulate a stock update from the wire:
-            var Update = row.insertCell(11);
-            var updatebtn = document.createElement("input");
-            updatebtn.type = "button";
-            updatebtn.value = "Sim Update";
-            updatebtn.id =  "updatebtn" + ticker;
-            Update.appendChild(updatebtn);
-
-            $('#updatebtn' + ticker).click(function() {
-
-                // update last stk price:
-                $('#last' + ticker).html("22");
-
-                //get new last:
-                var last = $('#last' + ticker).html();
-                //console.log("last is now: " +  last);
-
-                //get nshares:
-                var nshares = $('#nshares' + ticker).html();
-
-                // set/get curval:
-                $('#curval' + ticker).html(last * nshares);
-                var curval = $('#curval' + ticker).html();
-
-                // get origval:
-                var origval = $('#origval' + ticker).html();
-
-                //set gainloss:
-                $('#gainloss' + ticker).html(curval - origval);
-
             });
 
         } //addRow
@@ -225,10 +240,23 @@
 
         //  Form submit action:
         $("form").submit(function(){
+
            var ticker = $("#newticker").val();
-           var cost = $("#cost").val();
+           // Note, we don't check data type on the stock ticker,
+           // as there are numeric stock symbols, e.g. "3".
+
+           var cost    = $("#cost").val();
            var nshares = $("#nshares").val();
-           addRow('dataTable', ticker, cost, nshares);
+
+           if (ticker == "Stock Symbol" ) {
+               alert( "Please enter a Stock Symbol");
+           } else if (cost < 0 || isNaN(cost)) {
+               alert( "Please enter a positive numeric cost value");
+           } else if (nshares < 0 || isNaN(nshares)) {
+               alert( "Please enter a positive number for number of shares");
+           } else {
+               addRow('dataTable', ticker, cost, nshares);
+           }
 
            // Reset stock input boxes:
            tickerEl.value = stocktxt;
