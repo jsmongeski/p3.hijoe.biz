@@ -1,7 +1,5 @@
 
 
-        // Retrieve this from config page when it is ready:
-        //var brokerLink = '<a href="https://invest.ameritrade.com/grid/p/login" target = "_blank">Trade</a>';
         
         var currentBroker;
 
