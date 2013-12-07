@@ -28,13 +28,12 @@ input[type=text] {
 
 
 #gomez {
-	float:right;
    width:120px ;
    height:80px;
 }
 
 #dataTable {
-	margin-left:200px;
+	margin-left:250px;
    table-layout: fixed;
    width:"100%" 
    width:"1000px" 
