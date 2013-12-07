@@ -1,21 +1,18 @@
 
 
-
         // Retrieve this from config page when it is ready:
-        var brokerLink = '<a href="https://invest.ameritrade.com/grid/p/login" target = "_blank">Trade</a>';
+        //var brokerLink = '<a href="https://invest.ameritrade.com/grid/p/login" target = "_blank">Trade</a>';
+        
+        var currentBroker;
 
-        function addRow(table,ticker, cost, nshares) {
+        function addRow(table,ticker, cost, nshares, brokerLink) {
 
             // Create a new row:
             var table = document.getElementById(table);
 
             var rowCount = table.rows.length;
-            console.log("length of table in rows: " +rowCount);
             
-            console.log  ("length of this rowid is: " + $('#row'+ rowCount).length );
-
             while ( $('#row'+ rowCount).length != 0 ) {
-                console.log("found existing row" +rowCount );
                 rowCount++;
             } 
             
@@ -43,7 +40,7 @@
             var Last = row.insertCell(1);
             Last.type =  "text"; Last.name =  "last";
             Last.id =  "last" + ticker;
-            Last.innerHTML = "11"; 
+            Last.innerHTML = "1"; 
             var last = Last.innerHTML;
 
 
@@ -99,7 +96,7 @@
             GainLoss.type = "text";
             GainLoss.name = "gainloss";
             GainLoss.id =  "gainloss" + ticker;
-            curval=1;
+            curval=0;
             tmpval =  curval - origval;
 
             $('#gainloss' + ticker).css('backgroundColor', "lightgreen");
@@ -109,15 +106,20 @@
             GainLoss.innerHTML = tmpval.toFixed(2);
             tmpval =  0;
 
-            
 
             // Broker link
             var Trade = row.insertCell(9);
             Trade.type = "text";
             Trade.value = "Trade";
             Trade.id =  "trade" + ticker;
-            Trade.innerHTML = brokerLink;
 
+            if(brokerLink != "Broker eg: www.trade.com") {
+                var linkPrefix = '<a href="https://'
+                var linkSuffix =  '" target = "_blank">Trade</a>';
+                var res =  linkPrefix.concat(brokerLink);
+                currentBroker =  res.concat(linkSuffix);
+            }
+            Trade.innerHTML =  currentBroker;
 
 
             // Simulate a stock update from an internet data service:
@@ -131,7 +133,7 @@
             $('#updatebtn' + ticker).click(function() {
 
                 // last stk price:
-                $('#last' + ticker).html("22");
+                $('#last' + ticker).html("2");
 
                 // get new last:
                 var last = $('#last' + ticker).html();
@@ -171,8 +173,6 @@
                 var delId =  '#deleteme' + ticker;
                 var delRow = $(delId).parent().parent().index(); 
                 table.deleteRow(delRow);
-
-                //console.log("You clicked on row  "  + $(delId).parent().parent().index()); 
             });
 
         } //addRow
@@ -237,6 +237,23 @@
           }
         }
 
+        var brokerEl  = document.getElementById("brokerurl");
+        var brokertxt = "Broker eg: www.trade.com";
+        brokerEl.value = brokertxt;
+        brokerEl.style.color = "#0C9";
+
+        brokerEl.onmouseover = function() {
+          if (this.value == brokertxt) {
+            this.value = "";
+            this.style.color = "#000";
+          }
+        }
+        brokerEl.onmouseout = function() {
+          if (this.value == "") {
+            this.value = brokertxt;
+            this.style.color = "#0C9";
+          }
+        }
 
         //  Form submit action:
         $("form").submit(function(){
@@ -247,6 +264,7 @@
 
            var cost    = $("#cost").val();
            var nshares = $("#nshares").val();
+           var brokerLink = $("#brokerurl").val();
 
            if (ticker == "Stock Symbol" ) {
                alert( "Please enter a Stock Symbol");
@@ -254,8 +272,10 @@
                alert( "Please enter a positive numeric cost value");
            } else if (nshares < 0 || isNaN(nshares)) {
                alert( "Please enter a positive number for number of shares");
+           } else if(brokerLink.search("www") < 0 ) {
+               alert("Enter url in www.domain.domain format");
            } else {
-               addRow('dataTable', ticker, cost, nshares);
+               addRow('dataTable', ticker, cost, nshares, brokerLink);
            }
 
            // Reset stock input boxes:
@@ -265,12 +285,8 @@
            costEl.style.color = "#CCC";
            nsharesEl.value = nsharestxt;
            nsharesEl.style.color = "#CCC";
+           brokerEl.value = brokertxt;
+           brokerEl.style.color = "#CCC";
         });
 
-            /*
-            // For now, simulate with click event:
-            $(avvolId).click(function() {
-                 $(avvolId).html('300000');
-            });
-            */
 
